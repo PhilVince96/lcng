@@ -8,8 +8,12 @@ import (
 )
 
 func main() {
+	appConf := config.AppConfig()
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", Greet)
+
+	address := fmt.Sprintf(":%d", appConf.Server.Port)
 
 	log.Println("Starting server :8080")
 
