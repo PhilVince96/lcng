@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+"lcng/config"
 )
 
 func main() {
