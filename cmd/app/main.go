@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"lcng/app/router"
 	"log"
 	"net/http"
-	"time"
 
 	"lcng/config"
 )
@@ -12,19 +12,18 @@ import (
 func main() {
 	appConf := config.AppConfig()
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", Greet)
+	appRouter := router.New()
 
 	address := fmt.Sprintf(":%d", appConf.Server.Port)
 
-	log.Println("Starting server :8080")
+	log.Println("Starting app :8080")
 
 	s := &http.Server{
-		Addr:         ":8080",
-		Handler:      mux,
-		ReadTimeout:  30 * time.Second,
-		WriteTimeout: 30 * time.Second,
-		IdleTimeout:  120 * time.Second,
+		Addr:         address,
+		Handler:      appRouter,
+		ReadTimeout:  appConf.Server.TimeoutRead,
+		WriteTimeout: appConf.Server.TimeoutWrite,
+		IdleTimeout:  appConf.Server.TimeoutIdle,
 	}
 
 	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
