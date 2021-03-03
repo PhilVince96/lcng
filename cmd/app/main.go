@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-"lcng/config"
+	"lcng/config"
 )
 
 func main() {
