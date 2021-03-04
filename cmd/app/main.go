@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
+	"lcng/app/app"
 	"lcng/app/router"
-	"log"
+	lr "lcng/util/logger"
 	"net/http"
 
 	"lcng/config"
@@ -12,11 +13,15 @@ import (
 func main() {
 	appConf := config.AppConfig()
 
-	appRouter := router.New()
+	logger := lr.New(appConf.Debug)
+
+	application := app.New(logger)
+
+	appRouter := router.New(application )
 
 	address := fmt.Sprintf(":%d", appConf.Server.Port)
 
-	log.Println("Starting app :8080")
+	logger.Info().Msgf("Starting server %v", address)
 
 	s := &http.Server{
 		Addr:         address,
@@ -27,7 +32,7 @@ func main() {
 	}
 
 	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		log.Fatal("Server startup failed")
+		logger.Fatal().Err(err).Msg("Server startup failed")
 	}
 }
 
